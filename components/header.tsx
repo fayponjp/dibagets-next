@@ -1,8 +1,10 @@
 'use client';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 function NavLink({ path, name }: { path: string; name: string }) {
     const pathname = usePathname();
@@ -17,22 +19,38 @@ function NavLink({ path, name }: { path: string; name: string }) {
     );
 }
 
+function SearchPopover() {
+    return (
+        <dialog popover='' className='inset-0 fixed rounded m-auto open:backdrop:bg-black/20' id='search-popover'>
+            <header>
+                <div className='p-2'>
+                    <input type='text' />
+                </div>
+            </header>
+        </dialog>
+    );
+}
+
 export default function Header() {
     const [searchInput, setSearchInput] = useState<string | undefined>();
-    
+
     return (
-        <header className='py-4 bg-orange-100 w-full dark:bg-blue-950'>
-            <div className='mx-auto max-w-5xl'>
-                <div className='flex gap-2 align-middle'>
-                    <span className='text-4xl font-patua_one '>Dibagets?</span>
-                    <input type='text' className='bg-white p-2 rounded' placeholder='Maghanap' />
-                </div>
-                <nav className='sticky'>
-                    <ul className='flex gap-4'>
+        <header className='py-4 bg-orange-100 w-full  p-4 lg:px-0'>
+            <div className='mx-auto max-w-6xl flex flex-col gap-2 lg:flex-row justify-between'>
+                <span className='text-4xl font-patua_one '>Dibagets?</span>
+                <div className='flex flex-row gap-4'>
+                    <button
+                        popoverTarget='search-popover'
+                        className='hover:bg-gray-50 rounded w-50 bg-gray-100 text-gray-500 p-2 items-center text-sm cursor-pointer flex justify-between'
+                    >
+                        Maghanap <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    </button>
+                    <SearchPopover />
+                    <nav className='sticky flex gap-4 items-center'>
                         <NavLink path='' name='Home' />
                         <NavLink path='about' name='About' />
-                    </ul>
-                </nav>
+                    </nav>
+                </div>
             </div>
         </header>
     );

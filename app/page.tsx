@@ -1,4 +1,4 @@
-import { DictionaryAPI, Word } from './api/dictionary';
+import { DictionaryAPI, Expression } from './api/dictionary';
 import { Suspense, ReactNode } from 'react';
 
 export default async function Home() {

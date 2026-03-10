@@ -5,7 +5,7 @@ export const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_KEY!,
 );
 
-export interface Word {
+export interface Expression {
     wordID: number;
     word: string;
     definition: { definition: string }[];
@@ -14,7 +14,7 @@ export interface Word {
     tags?: string[];
 }
 
-export interface NewWord {
+export interface NewExpression {
     word: string;
     definition: string;
     example: string;
@@ -36,7 +36,7 @@ export const DictionaryAPI = {
         return { data, error };
     },
 
-    async getWordsByRange(page: number) {
+    async getWordsByRange(page: number, searchExpression?: string, wordId?: number) {
         const itemsPerPage = 10;
         const startingIndex = (page - 1) * itemsPerPage;
         const endingIndex = page * itemsPerPage - 1;
@@ -46,7 +46,12 @@ export const DictionaryAPI = {
                 'word, tags, wordID, definition:WordDefinitions(definition), example:WordDefinitions(example), created_at',
             )
             .range(startingIndex, endingIndex);
-
+        if (searchExpression) {
+            query = query.ilike('word', `%${searchExpression}%`);
+        }
+        if (wordId) {
+            query = query.eq('wordID', wordId)
+        }
         const { data, error } = await query;
 
         return { data, error }
@@ -57,5 +62,9 @@ export const DictionaryAPI = {
         const { count, error } = await query
 
         return { count, error }
+    },
+
+    async addExpression(newExpression: NewExpression) {
+        
     }
 };

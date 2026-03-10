@@ -1,22 +1,7 @@
-import { Suspense, useEffect, useState } from 'react';
+import { ReactNode, Suspense, useEffect, useState } from 'react';
 import { faMagnifyingGlass, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { DictionaryAPI } from '@/app/api/route';
-
-async function getWordData() {
-    const { data, error } = await DictionaryAPI.getWords();
-
-    if (data) {
-        console.log(data)
-    } else if (error) {
-        console.error(error);
-    }
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            thing
-        </Suspense>
-    )
-}
+import { DictionaryAPI, Expression } from '@/app/api/dictionary';
 
 export default function HeaderSearch() {
     const [searchTermArr, setSearchTermArr] = useState<Array<string>>([]);
@@ -28,13 +13,37 @@ export default function HeaderSearch() {
         }
     };
 
+    const [searchResultElements, setSearchResultElements] = useState<Array<ReactNode>>([]);
+    const searchResultHandler = (data: Array<Expression>) => {
+        const searchResultMap = data.map((result, index) => (
+            <li key={index}>
+                <button className='p-4 bg-orange-50 border hover:bg-orange-200 focus:bg-orange-300 active:bg-orange-300 border-orange-200 w-full rounded cursor-pointer'>{result.word}</button>
+            </li>
+        ));
+        
+        setSearchResultElements(searchResultMap);
+    }
+
+    const clearSearch = () => {
+        setSearchTerm('');
+        setSearchResultElements([]);
+    }
+
     useEffect(() => {
-        getWordData();
-    }, [])
+        if (searchTerm.length < 3) return;
+        const timeoutID = setTimeout(async () => {
+            const { data, error } = await DictionaryAPI.getWords(searchTerm);
+
+            if (data) searchResultHandler(data);
+        }, 300);
+
+        return () => clearTimeout(timeoutID);
+    }, [searchTerm]);
+
     return (
         <dialog
             popover=''
-            className='fixed border-orange-100 border w-100 max-w-[90%] rounded-2xl m-auto open:backdrop:bg-black/20 text-gray-500'
+            className='fixed w-100 max-w-[90%] rounded-2xl m-auto open:backdrop:bg-black/20 text-gray-500'
             id='search-popover'
         >
             <header className='border-b border-gray-300 p-4'>
@@ -48,7 +57,7 @@ export default function HeaderSearch() {
                     />
                     {searchTerm && (
                         <button
-                            onClick={() => setSearchTerm('')}
+                            onClick={() => clearSearch()}
                             className='ml-auto p-2 hover:bg-gray-100 rounded cursor-pointer'
                         >
                             <FontAwesomeIcon icon={faX} />
@@ -57,7 +66,7 @@ export default function HeaderSearch() {
                 </div>
             </header>
             <div className='text-center p-4 wrap-break-word'>
-                {searchTermArr.length > 0 ? '' : 'Kasaysayan ng mga hinanap'}
+                {searchResultElements.length > 0 ? <ul className='flex flex-col gap-2'>{searchResultElements}</ul> : 'Kasaysayan ng mga hinanap'}
             </div>
         </dialog>
     );

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Poppins, Patua_One } from 'next/font/google';
 import './globals.css';
-import Header from '@/components/header';
+import Header from '@/components/header/header';
 
 const poppins = Poppins({
     weight: ['400', '600', '700'],

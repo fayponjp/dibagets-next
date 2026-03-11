@@ -1,23 +1,22 @@
 import { ReactNode, Suspense, useEffect, useState } from 'react';
 import { faMagnifyingGlass, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { DictionaryAPI, Expression } from '@/app/api/dictionary';
 
+import { ExpressionType } from '@/lib/types';
 export default function HeaderSearch() {
     const [searchTermArr, setSearchTermArr] = useState<Array<string>>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
 
-    const searchInputHandler = () => {
-        if (searchTerm) {
-            setSearchTermArr((prevContent) => [...prevContent, searchTerm]);
-        }
+    const searchInputClickHandler = (expression: string) => {
+        setSearchTermArr((prevContent) => [...prevContent, expression]);
+        clearSearch();
     };
 
     const [searchResultElements, setSearchResultElements] = useState<Array<ReactNode>>([]);
-    const searchResultHandler = (data: Array<Expression>) => {
+    const searchResultHandler = (data: Array<ExpressionType>) => {
         const searchResultMap = data.map((result, index) => (
             <li key={index}>
-                <button className='p-4 bg-orange-50 border hover:bg-orange-200 focus:bg-orange-300 active:bg-orange-300 border-orange-200 w-full rounded cursor-pointer'>{result.word}</button>
+                <button onClick={() => searchInputClickHandler(result.expression)} className='p-4 bg-orange-50 border hover:bg-orange-200 focus:bg-orange-300 active:bg-orange-300 border-orange-200 w-full rounded cursor-pointer'>{result.expression}</button>
             </li>
         ));
         
@@ -32,9 +31,15 @@ export default function HeaderSearch() {
     useEffect(() => {
         if (searchTerm.length < 3) return;
         const timeoutID = setTimeout(async () => {
-            const { data, error } = await DictionaryAPI.getWords(searchTerm);
+            const response = await fetch(`/api/expressions?expression=${searchTerm}`);
 
-            if (data) searchResultHandler(data);
+            if (!response.ok) {
+                // error handle
+            } else {
+                const data = await response.json();
+                searchResultHandler(data);
+            }
+
         }, 300);
 
         return () => clearTimeout(timeoutID);

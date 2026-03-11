@@ -32,11 +32,11 @@ export default function RootLayout({
         >
             <body className='flex min-h-screen relative flex-col items-center font-poppins'>
                 <Header />
-                <main className='flex w-full max-w-6xl flex-col py-8'>
+                <main className='flex w-full max-w-6xl flex-col py-8 mb-16'>
                     {children}
                 </main>
-                <footer className='absolute bottom-0 py-4'>
-                    <div className='container'>© DiBagets 2025</div>
+                <footer className='absolute bottom-0 py-4 bg-red-950/80 w-full'>
+                    <div className='container text-white max-w-6xl mx-auto'>© DiBagets 2025</div>
                 </footer>
             </body>
         </html>

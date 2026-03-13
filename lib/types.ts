@@ -7,17 +7,19 @@ export interface Expression {
     tags?: string[];
 }
 
+export interface ExpressionDefinition {
+    definition?: string | undefined;
+    example?: string | undefined;
+    positiveVoteCount: number;
+    negativeVoteCount: number;
+    CreatedAt: string;
+    created_by: string;
+    word: number;
+}
+
 export interface ExpressionType {
     expression: string;
-    definitions: {
-        definition?: string,
-        example?: string,
-        positiveVoteCount: number,
-        negativeVoteCount: number,
-        CreatedAt: string,
-        created_by: string,
-        word: number,
-    }[] | []
+    definitions: ExpressionDefinition[] | []
 }
 
 export interface NewExpression {

@@ -12,7 +12,7 @@ function NavLink({ path, name }: { path: string; name: string }) {
     const isActive = pathname === `/${path}`;
     return (
         <Link
-            className={`${isActive ? 'underline underline-offset-2' : ''} cursor-pointer hover:bg-orange-50 p-2 rounded`}
+            className={`${isActive ? 'border-b-2' : ''} cursor-pointer hover:bg-orange-50 p-1 rounded-xs`}
             href={`/${path}`}
         >
             {name}
@@ -35,7 +35,7 @@ export default function Header() {
                         Maghanap <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </button>
                     <HeaderSearch />
-                    <nav className='sticky flex items-center'>
+                    <nav className='sticky flex items-center gap-2'>
                         <NavLink path='' name='Home' />
                         <NavLink path='about' name='About' />
                     </nav>

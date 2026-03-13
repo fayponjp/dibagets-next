@@ -7,6 +7,6 @@ export default async function Home() {
     const response = await fetchAPI(`${process.env.NEXT_PUBLIC_URL}/api/expressions`) as ExpressionType[];
 
     return (
-        <ExpressionView content={response} />
+        <ExpressionView content={response} singleDefinition={true}/>
     );
 }

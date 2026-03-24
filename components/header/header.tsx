@@ -26,7 +26,7 @@ export default function Header() {
     return (
         <header className='py-4 bg-orange-100 w-full p-4 lg:px-0'>
             <div className='mx-auto max-w-6xl flex flex-col gap-2 lg:flex-row justify-between'>
-                <span className='text-4xl font-patua_one '>Dibagets?</span>
+                <Link href='/' className='text-4xl font-patua_one '>Dibagets?</Link>
                 <div className='flex flex-col lg:flex-row gap-2'>
                     <button
                         popoverTarget='search-popover'

@@ -68,7 +68,7 @@ function ExpressionListItem({
             );
         } else {
             definitionElements = definitions.map((def, index) => (
-                <DefinitionOrderedListItem def={def} index={index} />
+                <DefinitionOrderedListItem key={index} def={def} index={index} />
             ));
         }
     }
